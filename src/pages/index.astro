@@ -1,16 +1,243 @@
 ---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import ContourButton from "../components/ContourButton.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import { featured, notes, allNotes, categories } from "../data/notes";
+
+const featuredHref = `/blog/${featured.slug}`;
+const totalNotes = allNotes.length;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+  title="Blog · Magdiel Márquez"
+  description="Brief explorations of mathematics, AI, and engineering. One focused idea at a time."
+>
+  <Header />
+  <main
+    class="flex w-full flex-col gap-12 px-6 pb-[72px] pt-16 md:px-12 xl:px-24"
+  >
+    <section
+      class="flex w-full flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+    >
+      <div class="flex w-full max-w-[820px] flex-col gap-4">
+        <p
+          class="font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-accent"
+        >
+          The Blog / Ideas in Focus
+        </p>
+        <h1
+          class="font-fraunces w-full text-[40px] font-semibold leading-[1.1] tracking-[-0.96px] md:text-[64px]"
+        >
+          Small notes. Deep ideas.
+        </h1>
+        <p
+          class="max-w-[690px] text-lg font-normal leading-[1.65] text-text-secondary"
+        >
+          Brief explorations of mathematics, AI, and engineering. One focused
+          idea at a time, from first principles to the systems we build.
+        </p>
+      </div>
+      <p
+        class="whitespace-nowrap font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-text-tertiary"
+      >
+        {String(totalNotes).padStart(2, "0")} notes / always curious
+      </p>
+    </section>
+
+    <section
+      class="flex w-full flex-col gap-10 rounded-[24px] bg-cacao-100 p-6 lg:flex-row lg:items-start"
+    >
+      <a
+        href={featuredHref}
+        class="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2.5 rounded-[10px] border bg-cacao-100 lg:aspect-auto lg:h-[342px] lg:w-[608px] lg:shrink-0"
+      >
+        <span class="text-2xl font-normal text-text-secondary"
+          >{featured.imageLabel}</span
+        >
+        <span class="text-xs font-normal leading-[1.4] text-text-tertiary"
+          >1200 × 675 · placehold.co</span
+        >
+      </a>
+      <div class="flex min-w-0 flex-1 flex-col gap-[18px] py-2">
+        <div class="flex items-center gap-3">
+          <span class="size-1.5 bg-accent"></span>
+          <p
+            class="font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-accent"
+          >
+            Featured / {featured.category}
+          </p>
+        </div>
+        <h2
+          class="font-fraunces w-full text-[32px] font-normal leading-[1.25] tracking-[-0.48px]"
+        >
+          <a
+            href={featuredHref}
+            class="transition-colors duration-200 hover:text-brand"
+            >{featured.title}</a
+          >
+        </h2>
+        <p
+          class="w-full text-base font-normal leading-[1.65] text-text-secondary"
+        >
+          {featured.excerpt}
+        </p>
+        <div class="flex flex-wrap items-start gap-2">
+          {
+            featured.tags.map((tag) => (
+              <span class="rounded-[10px] border px-2.5 py-1 text-xs font-normal leading-[1.4] text-text-secondary">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+        <p
+          class="text-xs font-normal leading-[1.4] text-text-tertiary"
+        >
+          {featured.author} · {featured.date} · {featured.readTime}
+        </p>
+        <a
+          href={featuredHref}
+          class="flex items-center gap-2 text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900"
+        >
+          Read the story
+          <img src="/assets/arrow-right.svg" alt="" class="size-4" />
+        </a>
+      </div>
+    </section>
+
+    <section class="flex w-full flex-col gap-8">
+      <div
+        class="flex w-full flex-wrap items-center justify-between gap-4 border-b pb-6"
+      >
+        <div class="flex flex-wrap items-start gap-2">
+          <ContourButton
+            label={`All notes · ${totalNotes}`}
+            active
+            data-filter="all"
+          />
+          {
+            categories.map((cat) => (
+              <ContourButton
+                label={`${cat.name} · ${cat.count}`}
+                data-filter={cat.name.toLowerCase()}
+              />
+            ))
+          }
+        </div>
+        <label
+          class="flex w-full max-w-[286px] items-center gap-3 rounded-[10px] border px-4 py-[11px] sm:w-[286px]"
+        >
+          <img src="/assets/search.svg" alt="" class="size-5 shrink-0" />
+          <input
+            id="note-search"
+            type="search"
+            placeholder="Search notes…"
+            class="w-full bg-transparent text-sm font-normal leading-[1.5] text-text-primary placeholder:text-text-tertiary focus:outline-none"
+          />
+        </label>
+      </div>
+
+      <div class="flex w-full items-start justify-between">
+        <h2 class="text-[22px] font-semibold leading-[1.25]">Latest notes</h2>
+        <button
+          id="sort-toggle"
+          type="button"
+          class="flex cursor-pointer items-center gap-2 text-sm font-normal leading-[1.5] text-text-tertiary transition-colors duration-200 hover:text-text-primary"
+        >
+          <span id="sort-label">Newest first</span>
+          <img
+            id="sort-icon"
+            src="/assets/arrow-down.svg"
+            alt=""
+            class="size-4 transition-transform duration-200"
+          />
+        </button>
+      </div>
+
+      <div
+        id="notes-grid"
+        class="grid w-full grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3"
+      >
+        {notes.map((note) => <ArticleCard note={note} />)}
+      </div>
+
+      <p
+        id="archive-end"
+        class="w-full pt-4 text-center font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-text-tertiary"
+      >
+        You’re all caught up / {totalNotes} of {totalNotes} notes
+      </p>
+    </section>
+  </main>
+  <Footer />
+
+  <script>
+    const filterButtons = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-filter]"),
+    );
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>(".note-card"),
+    );
+    const grid = document.getElementById("notes-grid")!;
+    const searchInput = document.getElementById(
+      "note-search",
+    ) as HTMLInputElement;
+    const sortToggle = document.getElementById("sort-toggle")!;
+    const sortLabel = document.getElementById("sort-label")!;
+    const sortIcon = document.getElementById("sort-icon")!;
+    const archiveEnd = document.getElementById("archive-end")!;
+
+    let category = "all";
+    let query = "";
+    let newestFirst = true;
+
+    function apply() {
+      const visible = cards.filter(
+        (card) =>
+          (category === "all" || card.dataset.category === category) &&
+          (card.dataset.search ?? "").includes(query),
+      );
+      visible.sort((a, b) =>
+        newestFirst
+          ? (b.dataset.date ?? "").localeCompare(a.dataset.date ?? "")
+          : (a.dataset.date ?? "").localeCompare(b.dataset.date ?? ""),
+      );
+      for (const card of cards) card.style.display = "none";
+      for (const card of visible) {
+        grid.appendChild(card);
+        card.style.display = "";
+      }
+      archiveEnd.textContent = visible.length
+        ? `You’re all caught up / ${visible.length + 1} of ${cards.length + 1} notes`
+        : "No notes match — try another search";
+    }
+
+    for (const button of filterButtons) {
+      button.addEventListener("click", () => {
+        category = button.dataset.filter ?? "all";
+        for (const other of filterButtons) {
+          if (other === button) {
+            other.dataset.active = "true";
+          } else {
+            delete other.dataset.active;
+          }
+        }
+        apply();
+      });
+    }
+
+    searchInput.addEventListener("input", () => {
+      query = searchInput.value.trim().toLowerCase();
+      apply();
+    });
+
+    sortToggle.addEventListener("click", () => {
+      newestFirst = !newestFirst;
+      sortLabel.textContent = newestFirst ? "Newest first" : "Oldest first";
+      sortIcon.classList.toggle("rotate-180", !newestFirst);
+      apply();
+    });
+  </script>
+</Base>

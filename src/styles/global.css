@@ -1,1 +1,53 @@
 @import "tailwindcss";
+
+@theme {
+  --color-bg-base: #faf7f4;
+  --color-border: #e2d8cd;
+  --color-text-primary: #241c17;
+  --color-text-secondary: #6a5a4a;
+  --color-text-tertiary: #7e6d5b;
+  --color-brand: #076b4e;
+  --color-accent: #a5411f;
+  --color-cacao-100: #f1ebe4;
+  --color-esmeralda-900: #073e2f;
+  --color-esmeralda-950: #04261d;
+
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --default-border-color: var(--color-border);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-fraunces {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+}
+
+/* SVG-contour button: outline by default, solid when active */
+.contour-btn .contour-btn-fill {
+  display: none;
+}
+.contour-btn[data-active="true"] .contour-btn-fill {
+  display: block;
+}
+.contour-btn .contour-btn-label {
+  color: var(--color-esmeralda-950);
+  transition: color 200ms ease;
+}
+.contour-btn[data-active="true"] .contour-btn-label {
+  color: #fff;
+}
+.contour-btn:hover .contour-btn-label {
+  color: var(--color-brand);
+}
+.contour-btn[data-active="true"]:hover .contour-btn-label {
+  color: #fff;
+}

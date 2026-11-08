@@ -1,0 +1,35 @@
+---
+interface Props {
+  label: string;
+  active?: boolean;
+  href?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { label, active = false, href, class: className, ...rest } = Astro.props;
+const Tag = href ? "a" : "button";
+---
+
+<Tag
+  href={href}
+  class:list={[
+    "contour-btn relative block h-16 w-48 shrink-0 cursor-pointer",
+    className,
+  ]}
+  data-active={active || undefined}
+  {...rest}
+>
+  <span
+    class="contour-btn-fill absolute left-[6.33px] top-[1.41px] h-[59.82px] w-[181.5px] rounded-bl-[2.24px] rounded-br-lg rounded-tl-[7.04px] rounded-tr-lg bg-esmeralda-900"
+  ></span>
+  <span
+    class="contour-btn-label absolute left-1/2 top-[21px] w-40 -translate-x-1/2 text-center text-sm font-medium leading-[1.5]"
+    >{label}</span
+  >
+  <img
+    src="/assets/button-border.svg"
+    alt=""
+    class="absolute inset-0 block h-full w-full"
+  />
+</Tag>

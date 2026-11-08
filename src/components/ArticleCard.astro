@@ -1,0 +1,71 @@
+---
+import type { Note } from "../data/notes";
+
+interface Props {
+  note: Note;
+}
+
+const { note } = Astro.props;
+const href = `/blog/${note.slug}`;
+const searchText =
+  `${note.title} ${note.excerpt} ${note.category} ${note.tags.join(" ")}`.toLowerCase();
+---
+
+<article
+  class="note-card flex w-full flex-col gap-4"
+  data-category={note.category.toLowerCase()}
+  data-search={searchText}
+  data-date={note.dateISO}
+>
+  <a
+    href={href}
+    class="flex h-[216px] w-full flex-col items-center justify-center gap-2.5 rounded-[10px] border bg-cacao-100"
+  >
+    <span class="text-2xl font-normal text-text-secondary"
+      >{note.imageLabel}</span
+    >
+    <span class="text-xs font-normal leading-[1.4] text-text-tertiary"
+      >1200 × 675 · placehold.co</span
+    >
+  </a>
+  <div class="flex w-full items-start justify-between text-xs leading-[1.4]">
+    <span
+      class="font-mono font-medium uppercase tracking-[0.96px] text-accent"
+      >{note.category}</span
+    >
+    <span class="font-normal text-text-tertiary">{note.readTime}</span>
+  </div>
+  <h3 class="min-h-[55px] w-full text-[22px] font-semibold leading-[1.25]">
+    <a href={href} class="transition-colors duration-200 hover:text-brand"
+      >{note.title}</a
+    >
+  </h3>
+  <p
+    class="min-h-[53px] w-full text-base font-normal leading-[1.65] text-text-secondary"
+  >
+    {note.excerpt}
+  </p>
+  <div class="flex flex-wrap items-start gap-2">
+    {
+      note.tags.map((tag) => (
+        <span class="rounded-[10px] border px-2.5 py-1 text-xs font-normal leading-[1.4] text-text-secondary">
+          {tag}
+        </span>
+      ))
+    }
+  </div>
+  <div class="flex w-full items-start justify-between pt-1">
+    <time
+      datetime={note.dateISO}
+      class="text-xs font-normal leading-[1.4] text-text-tertiary"
+      >{note.date}</time
+    >
+    <a
+      href={href}
+      class="flex items-center gap-2 text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900"
+    >
+      Read article
+      <img src="/assets/arrow-right.svg" alt="" class="size-4" />
+    </a>
+  </div>
+</article>

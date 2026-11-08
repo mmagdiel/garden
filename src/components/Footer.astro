@@ -1,0 +1,40 @@
+---
+const socials = [
+  { label: "GitHub", icon: "/assets/github.svg", href: "#" },
+  { label: "LinkedIn", icon: "/assets/linkedin.svg", href: "#" },
+  { label: "Email", icon: "/assets/email.svg", href: "#" },
+];
+---
+
+<footer
+  class="flex w-full shrink-0 flex-col gap-8 border-t px-6 py-10 md:px-12 xl:px-24"
+>
+  <div
+    class="flex w-full flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div class="flex flex-col gap-2">
+      <p class="text-[22px] font-semibold leading-[1.25]">Magdiel Márquez</p>
+      <p class="text-sm font-normal leading-[1.5] text-text-secondary">
+        Forward Deployed Engineer · Tecnocreativo
+      </p>
+    </div>
+    <div class="flex items-start gap-6">
+      {
+        socials.map((social) => (
+          <a href={social.href} class="flex items-center gap-2">
+            <img src={social.icon} alt="" class="size-[18px]" />
+            <span class="whitespace-nowrap text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900">
+              {social.label}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <div
+    class="flex w-full items-start justify-between text-xs font-normal leading-[1.4] text-text-tertiary"
+  >
+    <p>© 2026 Magdiel Márquez</p>
+    <p>Built with intention. Written with curiosity.</p>
+  </div>
+</footer>
