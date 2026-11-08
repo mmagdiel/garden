@@ -1,0 +1,236 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import {
+  allNotes,
+  noteNumber,
+  relatedNotes,
+  type Note,
+} from "../../data/notes";
+
+export function getStaticPaths() {
+  return allNotes.map((note) => ({
+    params: { slug: note.slug },
+    props: { note },
+  }));
+}
+
+interface Props {
+  note: Note;
+}
+
+const { note } = Astro.props;
+const related = relatedNotes(note);
+const author = "Magdiel Márquez";
+const authorInitials = author
+  .split(/\s+/)
+  .map((word) => word[0])
+  .join("")
+  .toUpperCase();
+const position = `NOTE ${noteNumber(note)} / ${note.category.toUpperCase()}`;
+---
+
+<Base
+  title={`${note.title} · Magdiel Márquez`}
+  description={note.excerpt}
+>
+  <Header />
+  <main
+    class="flex w-full flex-col gap-10 px-6 pb-[72px] pt-10 md:px-12 xl:px-24"
+  >
+    <nav class="flex w-full items-start justify-between" aria-label="Breadcrumb">
+      <a
+        href="/"
+        class="flex items-center gap-2 text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900"
+      >
+        <img src="/assets/arrow-left.svg" alt="" class="h-[14.4px] w-4" />
+        All notes
+      </a>
+      <p
+        class="whitespace-nowrap font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-text-tertiary"
+      >
+        {position}
+      </p>
+    </nav>
+
+    <section class="flex w-full flex-col items-center gap-6">
+      <div class="flex w-full max-w-[1040px] flex-col gap-5">
+        <p
+          class="font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-accent"
+        >
+          {note.eyebrow}
+        </p>
+        <h1
+          class="font-fraunces w-full text-[36px] font-semibold leading-[1.1] tracking-[-0.96px] md:text-[64px]"
+        >
+          {note.title}
+        </h1>
+        <p
+          class="max-w-[860px] text-lg font-normal leading-[1.65] text-text-secondary"
+        >
+          {note.lede}
+        </p>
+      </div>
+      <div
+        class="flex w-full max-w-[1040px] flex-wrap items-center justify-between gap-4"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex size-10 items-center justify-center rounded-[10px] bg-cacao-100"
+          >
+            <span
+              class="text-sm font-medium leading-[1.5] text-brand"
+              >{authorInitials}</span
+            >
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <p class="text-sm font-medium leading-[1.5]">{author}</p>
+            <p class="text-xs font-normal leading-[1.4] text-text-tertiary">
+              {note.date} · {note.readTime}
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-start gap-2">
+          {
+            note.tags.map((tag) => (
+              <span class="rounded-[10px] border px-2.5 py-1 text-xs font-normal leading-[1.4] text-text-secondary">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <figure class="flex w-full flex-col gap-2.5">
+      <div
+        class="flex h-[240px] w-full flex-col items-center justify-center gap-2.5 rounded-[10px] border bg-cacao-100 md:h-[420px]"
+      >
+        <span class="text-2xl font-normal text-text-secondary"
+          >{note.imageLabel}</span
+        >
+        <span class="text-xs font-normal leading-[1.4] text-text-tertiary"
+          >1200 × 675 · placehold.co</span
+        >
+      </div>
+      <figcaption
+        class="flex w-full items-start justify-between text-xs font-normal leading-[1.4] text-text-tertiary"
+      >
+        <span>{note.imageLabel} · Cover placeholder</span>
+        <span>placehold.co</span>
+      </figcaption>
+    </figure>
+
+    <div class="flex w-full flex-col gap-10 py-2 lg:flex-row lg:gap-16">
+      <aside class="flex w-full shrink-0 flex-col gap-5 lg:w-[196px]">
+        <p
+          class="font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-accent"
+        >
+          In this note
+        </p>
+        <p class="text-sm font-normal leading-[1.5] text-text-secondary">
+          {note.sidebarSummary}
+        </p>
+        <hr class="h-px w-full border-0 bg-border" />
+        <ul
+          class="flex flex-col text-xs font-normal leading-[1.4] text-text-tertiary"
+        >
+          {note.topics.map((topic) => <li>{topic}</li>)}
+        </ul>
+        <div class="flex flex-col gap-3 pt-3">
+          <p
+            class="font-mono text-xs font-medium uppercase leading-[1.4] tracking-[0.96px] text-text-tertiary"
+          >
+            Share this note
+          </p>
+          <button
+            id="copy-link"
+            type="button"
+            class="flex cursor-pointer items-center gap-2 text-left text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900"
+          >
+            <img src="/assets/link.svg" alt="" class="h-4 w-[15.85px]" />
+            <span id="copy-link-label">Copy link</span>
+          </button>
+          <button
+            id="share-linkedin"
+            type="button"
+            class="flex cursor-pointer items-center gap-2 text-left text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900"
+          >
+            <img src="/assets/linkedin-sm.svg" alt="" class="h-4 w-[13.24px]" />
+            LinkedIn
+          </button>
+        </div>
+      </aside>
+
+      <article class="flex w-full max-w-[728px] flex-col gap-6">
+        {
+          note.body.map((paragraph) => (
+            <p class="text-lg font-normal leading-[1.65]">{paragraph}</p>
+          ))
+        }
+        <span class="size-2.5 bg-text-primary" aria-hidden="true"></span>
+        <div
+          class="flex w-full flex-col gap-2 border-t pt-6 text-sm leading-[1.5]"
+        >
+          <p class="font-medium">Written by {author}</p>
+          <p class="font-normal text-text-secondary">
+            Forward Deployed Engineer exploring the connections between
+            mathematics, intelligent systems, and the craft of building.
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <section class="flex w-full flex-col gap-8 border-t pt-10">
+      <div class="flex w-full items-center justify-between">
+        <h2
+          class="font-fraunces text-[32px] font-normal leading-[1.25] tracking-[-0.48px]"
+        >
+          Keep following the thread
+        </h2>
+        <a
+          href="/"
+          class="flex items-center gap-2 text-sm font-medium leading-[1.5] text-brand transition-colors duration-200 hover:text-esmeralda-900"
+        >
+          All notes
+          <img src="/assets/arrow-right.svg" alt="" class="h-[14.4px] w-4" />
+        </a>
+      </div>
+      <div
+        class="grid w-full grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3"
+      >
+        {related.map((item) => <ArticleCard note={item} />)}
+      </div>
+    </section>
+  </main>
+  <Footer />
+
+  <script>
+    const copyButton = document.getElementById("copy-link");
+    const copyLabel = document.getElementById("copy-link-label");
+    copyButton?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        if (copyLabel) {
+          copyLabel.textContent = "Copied!";
+          setTimeout(() => (copyLabel.textContent = "Copy link"), 1600);
+        }
+      } catch {
+        window.prompt("Copy this link:", window.location.href);
+      }
+    });
+
+    document
+      .getElementById("share-linkedin")
+      ?.addEventListener("click", () => {
+        const url = encodeURIComponent(window.location.href);
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+          "_blank",
+          "noopener,width=600,height=540",
+        );
+      });
+  </script>
+</Base>
